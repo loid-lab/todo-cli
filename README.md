@@ -1,4 +1,4 @@
-# 🧋 Grocery List TUI (Bubble Tea)
+# 🧋 Todo List TUI (Bubble Tea)
 
 A simple interactive terminal app to manage a to-do list using the [Bubble Tea](https://github.com/charmbracelet/bubbletea) framework in Go.
 
