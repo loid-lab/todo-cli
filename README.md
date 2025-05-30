@@ -10,17 +10,18 @@ A simple interactive terminal app to manage a to-do list using the [Bubble Tea](
 - Add new items by pressing `a`
 - Delete selected items by pressing `d`
 - Quit with `q` or `ctrl+c`
+- Rename the list title by pressing `t`
 
 ## 🖼️ Preview
 
 ```text
-What should we buy at the market?
+🛒 Grocery Trip for Sunday
 
-> [x] Buy carrots
-  [ ] Buy celery
+> [ ] Buy carrots
+  [x] Buy celery
   [ ] Buy kohlrabi
 
-↑/↓: move • space/enter: toggle • a: add • d: delete • q: quit
+↑/↓: move • space/enter: toggle • a: add • t: title • d: delete • q: quit
 ```
 
 ## 🚀 Getting Started

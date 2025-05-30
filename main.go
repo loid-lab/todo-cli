@@ -12,18 +12,22 @@ import (
 var (
 	cursorStyle  = lipgloss.NewStyle().Foreground(lipgloss.Color("212"))
 	checkedStyle = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("10"))
+	titleStyle   = lipgloss.NewStyle().Bold(true).Underline(true).Foreground(lipgloss.Color("63"))
 )
 
 type model struct {
+	title    string
 	choices  []string
 	cursor   int
 	selected map[int]struct{}
 	adding   bool
+	renaming bool
 	input    string
 }
 
 func initialModel() model {
 	return model{
+		title:    "🛒 Grocery Trip for Sunday",
 		choices:  []string{"Buy carrots", "Buy celery", "Buy kohlrabi"},
 		selected: make(map[int]struct{}),
 	}
@@ -37,6 +41,30 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 
 	case tea.KeyMsg:
+		if m.renaming {
+			switch msg.Type {
+			case tea.KeyEnter:
+				trimmed := strings.TrimSpace(m.input)
+				if trimmed != "" {
+					m.title = trimmed
+				}
+				m.input = ""
+				m.renaming = false
+				return m, nil
+			case tea.KeyEsc:
+				m.input = ""
+				m.renaming = false
+				return m, nil
+			case tea.KeyBackspace:
+				if len(m.input) > 0 {
+					m.input = m.input[:len(m.input)-1]
+				}
+			default:
+				m.input += msg.String()
+			}
+			return m, nil
+		}
+
 		if m.adding {
 			switch msg.Type {
 			case tea.KeyEnter:
@@ -82,6 +110,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "a":
 			m.adding = true
 			m.input = ""
+		case "t":
+			m.renaming = true
+			m.input = m.title
 		case "d":
 			if len(m.selected) > 0 {
 				newChoices := []string{}
@@ -91,7 +122,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					}
 				}
 				m.choices = newChoices
-				m.selected = make(map[int]struct{}) // clear selection
+				m.selected = make(map[int]struct{})
 				if m.cursor >= len(m.choices) {
 					m.cursor = len(m.choices) - 1
 					if m.cursor < 0 {
@@ -106,11 +137,16 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m model) View() string {
+	if m.renaming {
+		return fmt.Sprintf("Rename the list title: %s\n\n(Enter to confirm, Esc to cancel)", m.input)
+	}
+
 	if m.adding {
 		return fmt.Sprintf("Add an item: %s\n\n(Enter to confirm, Esc to cancel)", m.input)
 	}
 
-	s := "What should we buy at the market?\n\n"
+	s := titleStyle.Render(m.title) + "\n\n"
+
 	for i, choice := range m.choices {
 		cursor := " "
 		if m.cursor == i {
@@ -125,7 +161,7 @@ func (m model) View() string {
 		s += fmt.Sprintf("%s [%s] %s\n", cursor, checked, choice)
 	}
 
-	s += "\n↑/↓: move • space/enter: toggle • a: add • d: delete • q: quit\n"
+	s += "\n↑/↓: move • space/enter: toggle • a: add • t: title • d: delete • q: quit\n"
 	return s
 }
 
