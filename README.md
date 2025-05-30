@@ -15,7 +15,7 @@ A simple interactive terminal app to manage a to-do list using the [Bubble Tea](
 ## 🖼️ Preview
 
 ```text
-🛒 Grocery Trip for Sunday
+Grocery Trip for Sunday
 
 > [ ] Buy carrots
   [x] Buy celery

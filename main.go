@@ -27,7 +27,7 @@ type model struct {
 
 func initialModel() model {
 	return model{
-		title:    "🛒 Grocery Trip for Sunday",
+		title:    "Grocery List", // <- use ASCII-safe title
 		choices:  []string{"Buy carrots", "Buy celery", "Buy kohlrabi"},
 		selected: make(map[int]struct{}),
 	}
@@ -60,7 +60,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.input = m.input[:len(m.input)-1]
 				}
 			default:
-				m.input += msg.String()
+				if len(msg.String()) == 1 {
+					m.input += msg.String()
+				}
 			}
 			return m, nil
 		}
@@ -85,7 +87,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.input = m.input[:len(m.input)-1]
 				}
 			default:
-				m.input += msg.String()
+				if len(msg.String()) == 1 {
+					m.input += msg.String()
+				}
 			}
 			return m, nil
 		}
