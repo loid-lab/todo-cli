@@ -27,7 +27,7 @@ type model struct {
 
 func initialModel() model {
 	return model{
-		title:    "Grocery List", // <- use ASCII-safe title
+		title:    "Grocery List",
 		choices:  []string{"Buy carrots", "Buy celery", "Buy kohlrabi"},
 		selected: make(map[int]struct{}),
 	}
